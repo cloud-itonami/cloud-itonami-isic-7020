@@ -2,7 +2,7 @@
 
 ## Classification
 
-- Repository: `cloud-itonami-7020`
+- Repository: `cloud-itonami-isic-7020`
 - ISIC Rev.5: `7020`
 - Activity: management consultancy -- advising client organizations on strategy, operations, organization and management practice
 - Social impact: professional standards, data sovereignty, transparent audit

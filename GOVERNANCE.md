@@ -1,6 +1,6 @@
 # Governance
 
-`cloud-itonami-7020` is an OSS open-business blueprint for management consultancy -- advising client organizations on strategy, operations, organization and management practice.
+`cloud-itonami-isic-7020` is an OSS open-business blueprint for management consultancy -- advising client organizations on strategy, operations, organization and management practice.
 Governance covers both the capability layer and the operator model.
 
 ## Maintainers

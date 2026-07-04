@@ -1,4 +1,4 @@
-# cloud-itonami-7020
+# cloud-itonami-isic-7020
 
 Open Business Blueprint for **ISIC Rev.5 7020**: Management consultancy activities.
 

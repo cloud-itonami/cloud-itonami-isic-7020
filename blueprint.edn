@@ -1,4 +1,4 @@
-{:itonami.blueprint/id "cloud-itonami-7020"
+{:itonami.blueprint/id "cloud-itonami-isic-7020"
  :itonami.blueprint/name "Management consultancy activities"
  :itonami.blueprint/isic-rev5 "7020"
  :itonami.blueprint/domain :professional/management-consultancy
