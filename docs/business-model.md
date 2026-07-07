@@ -34,3 +34,11 @@
 - a fabricated finding forces a hold, not an override
 - every deliverable path is auditable
 - emergency manual override paths remain outside LLM control
+- a fabricated professional-standards citation, incomplete evidence, a
+  deliverable that exceeds the contracted engagement scope, or an
+  unresolved conflict of interest -- each forces a hold, not an
+  override
+- deliverable issuance is logged and escalated, and cannot be
+  finalized twice for the same engagement: a double-issuance attempt
+  is held off this actor's own engagement facts alone, with no
+  upstream comparison needed
