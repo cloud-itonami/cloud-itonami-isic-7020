@@ -2,6 +2,16 @@
 
 Shortest path from clone to a verified local dry-run for **ISIC 7020** (`cloud-itonami-isic-7020`).
 
+## Who this is for
+
+Licensed independent management consultants or small consulting practices who want to own customer engagement data and process, and need a governed compliance scaffold for:
+- Engagement intake & professional-standards verification (by jurisdiction)
+- Conflict-of-interest screening
+- Deliverable issuance with evidence trail and human sign-off
+- Immutable audit ledger
+
+You run the expert work; the Governor enforces the compliance controls.
+
 ## Prerequisites
 
 - Clojure 1.12+ (`clojure --version`)
