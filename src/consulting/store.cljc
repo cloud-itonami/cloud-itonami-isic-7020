@@ -33,10 +33,9 @@
   always a query over an immutable log -- the audit trail a client
   trusting a consultancy needs, and the evidence a consultancy needs
   if a deliverable-issuance decision is later disputed."
-  (:require #?(:clj  [clojure.edn :as edn]
-               :cljs [cljs.reader :as edn])
-            [consulting.registry :as registry]
-            [langchain.db :as d]))
+  (:require [consulting.registry :as registry]
+            [langchain.db :as d]
+            [langchain-store.core :as ls]))
 
 (defprotocol Store
   (engagement [s id])
@@ -161,16 +160,13 @@
    :deliverable/seq                   {:db/unique :db.unique/identity}
    :deliverable-sequence/jurisdiction {:db/unique :db.unique/identity}})
 
-(defn- enc [v] (pr-str v))
-(defn- dec* [s] (when s (edn/read-string s)))
-
 (defn- engagement->tx [{:keys [id client-name contracted-scope-items recommendation-topics
                                conflict-of-interest-unresolved?
                                deliverable-issued? jurisdiction status issuance-number]}]
   (cond-> {:engagement/id id}
     client-name                                (assoc :engagement/client-name client-name)
-    contracted-scope-items                     (assoc :engagement/contracted-scope-items (enc contracted-scope-items))
-    recommendation-topics                      (assoc :engagement/recommendation-topics (enc recommendation-topics))
+    contracted-scope-items                     (assoc :engagement/contracted-scope-items (ls/enc contracted-scope-items))
+    recommendation-topics                      (assoc :engagement/recommendation-topics (ls/enc recommendation-topics))
     (some? conflict-of-interest-unresolved?)   (assoc :engagement/conflict-of-interest-unresolved? conflict-of-interest-unresolved?)
     (some? deliverable-issued?)                (assoc :engagement/deliverable-issued? deliverable-issued?)
     jurisdiction                               (assoc :engagement/jurisdiction jurisdiction)
@@ -185,8 +181,8 @@
 (defn- pull->engagement [m]
   (when (:engagement/id m)
     {:id (:engagement/id m) :client-name (:engagement/client-name m)
-     :contracted-scope-items (dec* (:engagement/contracted-scope-items m))
-     :recommendation-topics (dec* (:engagement/recommendation-topics m))
+     :contracted-scope-items (ls/dec* (:engagement/contracted-scope-items m))
+     :recommendation-topics (ls/dec* (:engagement/recommendation-topics m))
      :conflict-of-interest-unresolved? (boolean (:engagement/conflict-of-interest-unresolved? m))
      :deliverable-issued? (boolean (:engagement/deliverable-issued? m))
      :jurisdiction (:engagement/jurisdiction m) :status (:engagement/status m)
@@ -201,21 +197,21 @@
          (map #(pull->engagement (d/pull (d/db conn) engagement-pull [:engagement/id %])))
          (sort-by :id)))
   (conflict-screen-of [_ id]
-    (dec* (d/q '[:find ?p . :in $ ?eid
+    (ls/dec* (d/q '[:find ?p . :in $ ?eid
                 :where [?k :conflict-screen/engagement-id ?eid] [?k :conflict-screen/payload ?p]]
               (d/db conn) id)))
   (finding-of [_ engagement-id]
-    (dec* (d/q '[:find ?p . :in $ ?eid
+    (ls/dec* (d/q '[:find ?p . :in $ ?eid
                 :where [?a :finding/engagement-id ?eid] [?a :finding/payload ?p]]
               (d/db conn) engagement-id)))
   (ledger [_]
     (->> (d/q '[:find ?s ?f :where [?e :ledger/seq ?s] [?e :ledger/fact ?f]] (d/db conn))
          (sort-by first)
-         (mapv (comp dec* second))))
+         (mapv (comp ls/dec* second))))
   (deliverable-history [_]
     (->> (d/q '[:find ?s ?r :where [?e :deliverable/seq ?s] [?e :deliverable/record ?r]] (d/db conn))
          (sort-by first)
-         (mapv (comp dec* second))))
+         (mapv (comp ls/dec* second))))
   (next-deliverable-sequence [_ jurisdiction]
     (or (d/q '[:find ?n . :in $ ?j
               :where [?e :deliverable-sequence/jurisdiction ?j] [?e :deliverable-sequence/next ?n]]
@@ -229,10 +225,10 @@
       (d/transact! conn [(engagement->tx value)])
 
       :finding/set
-      (d/transact! conn [{:finding/engagement-id (first path) :finding/payload (enc payload)}])
+      (d/transact! conn [{:finding/engagement-id (first path) :finding/payload (ls/enc payload)}])
 
       :conflict-screen/set
-      (d/transact! conn [{:conflict-screen/engagement-id (first path) :conflict-screen/payload (enc payload)}])
+      (d/transact! conn [{:conflict-screen/engagement-id (first path) :conflict-screen/payload (ls/enc payload)}])
 
       :engagement/mark-issued
       (let [engagement-id (first path)
@@ -242,12 +238,12 @@
         (d/transact! conn
                      [(engagement->tx (assoc engagement-patch :id engagement-id))
                       {:deliverable-sequence/jurisdiction jurisdiction :deliverable-sequence/next next-n}
-                      {:deliverable/seq (count (deliverable-history s)) :deliverable/record (enc (get result "record"))}])
+                      {:deliverable/seq (count (deliverable-history s)) :deliverable/record (ls/enc (get result "record"))}])
         result)
       nil)
     s)
   (append-ledger! [s fact]
-    (d/transact! conn [{:ledger/seq (count (ledger s)) :ledger/fact (enc fact)}])
+    (d/transact! conn [{:ledger/seq (count (ledger s)) :ledger/fact (ls/enc fact)}])
     fact)
   (with-engagements [s engagements]
     (when (seq engagements) (d/transact! conn (mapv engagement->tx (vals engagements)))) s))
