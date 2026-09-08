@@ -29,7 +29,7 @@
   itself (that is `consulting.operation`'s `:actuation/issue-
   deliverable`, always human-gated -- see README `Actuation`)."
   (:require [clojure.set :as set]
-            [clojure.string :as str]))
+            [kotoba.lang.text :as str]))
 
 (defn- unsigned-certificate
   "Every certificate this actor produces is UNSIGNED -- signature is the
@@ -72,7 +72,7 @@
     (throw (ex-info "deliverable-issuance: jurisdiction required" {})))
   (when (< sequence 0)
     (throw (ex-info "deliverable-issuance: sequence must be >= 0" {})))
-  (let [issuance-number (str (str/upper-case jurisdiction) "-DLV-" (zero-pad sequence 6))
+  (let [issuance-number (str (str/upper jurisdiction) "-DLV-" (zero-pad sequence 6))
         record {"record_id" issuance-number
                 "kind" "deliverable-issuance-draft"
                 "engagement_id" engagement-id
