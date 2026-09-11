@@ -102,7 +102,7 @@ autonomous, at any phase, by construction.** Two independent layers
 enforce this (`consulting.governor`'s `:actuation/issue-deliverable`
 high-stakes gate and `consulting.phase`'s phase table, which never
 puts `:actuation/issue-deliverable` in any phase's `:auto` set) -- see
-`consulting.phase`'s docstring and `test/consulting/phase_test.clj`'s
+`consulting.phase`'s docstring and `test/consulting/phase_test.cljk`'s
 `issue-deliverable-never-auto-at-any-phase`. The actor may draft,
 check and recommend; a human consultant is always the one who
 actually issues a deliverable. Unlike the majority of siblings in this
@@ -192,14 +192,14 @@ stack only -- no bespoke domain capability lib to reference at all.
 
 | File | Role |
 |---|---|
-| `src/consulting/store.cljc` | **Store** protocol -- `MemStore` ‖ `DatomicStore` (`langchain.db`) + append-only audit ledger + deliverable-issuance history. No dynamically-filed sub-record -- the single actuation op acts directly on a pre-seeded engagement, and the double-actuation guard checks a dedicated `:deliverable-issued?` boolean rather than a `:status` value |
-| `src/consulting/registry.cljc` | Deliverable-issuance draft records, plus `engagement-scope-exceeded?` -- the FOURTH instance of this fleet's set-containment/subset check family (`registrar`/`casework`/`secondary` established the first three), in the opposite polarity (a proposed set must stay a subset of a contracted set) |
-| `src/consulting/facts.cljc` | Per-jurisdiction management-consultancy professional-standards catalog with an official spec-basis citation per entry, honest coverage reporting |
-| `src/consulting/consultantadvisor.cljc` | **Consultant-LLM** -- `mock-advisor` ‖ `llm-advisor`; intake/finding-research/conflict-screening/deliverable-issuance proposals |
-| `src/consulting/governor.cljc` | **Consulting Engagement Governor** -- 4 HARD checks (spec-basis · evidence-incomplete · engagement-scope-exceeded, pure ground-truth subset recompute · conflict-of-interest-unresolved, unconditional evaluation, the TWENTY-NINTH grounding of this discipline and FOURTH grounding of the specific conflict-of-interest concept, first outside financial services) + already-issued guard + 1 soft (confidence/actuation gate) |
-| `src/consulting/phase.cljc` | **Phase 0→3** -- read-only → assisted intake → assisted verify → supervised (deliverable issuance always human; engagement intake is the ONLY auto-eligible op, no direct capital risk) |
-| `src/consulting/operation.cljc` | **OperationActor** -- langgraph-clj StateGraph |
-| `src/consulting/sim.cljc` | demo driver |
+| `src/consulting/store.cljk` | **Store** protocol -- `MemStore` ‖ `DatomicStore` (`langchain.db`) + append-only audit ledger + deliverable-issuance history. No dynamically-filed sub-record -- the single actuation op acts directly on a pre-seeded engagement, and the double-actuation guard checks a dedicated `:deliverable-issued?` boolean rather than a `:status` value |
+| `src/consulting/registry.cljk` | Deliverable-issuance draft records, plus `engagement-scope-exceeded?` -- the FOURTH instance of this fleet's set-containment/subset check family (`registrar`/`casework`/`secondary` established the first three), in the opposite polarity (a proposed set must stay a subset of a contracted set) |
+| `src/consulting/facts.cljk` | Per-jurisdiction management-consultancy professional-standards catalog with an official spec-basis citation per entry, honest coverage reporting |
+| `src/consulting/consultantadvisor.cljk` | **Consultant-LLM** -- `mock-advisor` ‖ `llm-advisor`; intake/finding-research/conflict-screening/deliverable-issuance proposals |
+| `src/consulting/governor.cljk` | **Consulting Engagement Governor** -- 4 HARD checks (spec-basis · evidence-incomplete · engagement-scope-exceeded, pure ground-truth subset recompute · conflict-of-interest-unresolved, unconditional evaluation, the TWENTY-NINTH grounding of this discipline and FOURTH grounding of the specific conflict-of-interest concept, first outside financial services) + already-issued guard + 1 soft (confidence/actuation gate) |
+| `src/consulting/phase.cljk` | **Phase 0→3** -- read-only → assisted intake → assisted verify → supervised (deliverable issuance always human; engagement intake is the ONLY auto-eligible op, no direct capital risk) |
+| `src/consulting/operation.cljk` | **OperationActor** -- langgraph-clj StateGraph |
+| `src/consulting/sim.cljk` | demo driver |
 | `test/consulting/*_test.clj` | governor contract · phase invariants · store parity · registry conformance · facts coverage |
 
 ## Business-process coverage (honest)
