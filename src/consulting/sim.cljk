@@ -1,5 +1,5 @@
 (ns consulting.sim
-  "Demo driver -- `clojure -M:dev:run`. Walks a clean engagement
+  "Demo driver -- `kbb -M:dev:run`. Walks a clean engagement
   through intake -> finding/research -> conflict-of-interest screening
   -> deliverable-issuance proposal (always escalates) -> human
   approval -> commit, then shows four HARD holds (a jurisdiction with
