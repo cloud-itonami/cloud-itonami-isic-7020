@@ -1,5 +1,5 @@
 (ns consulting.registry-test
-  (:require [clojure.test :refer [deftest is]]
+  (:require [kotoba.test :refer [deftest is]]
             [consulting.registry :as r]))
 
 ;; ----------------------------- engagement-scope-exceeded? -----------------------------
