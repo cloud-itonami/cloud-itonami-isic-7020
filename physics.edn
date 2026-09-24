@@ -1,0 +1,35 @@
+;; What this vertical's robot physically does, declared for
+;; kotoba.robotics.process (kotoba-lang/robotics). `kbb -M:dev:physics` runs it.
+;;
+;; README "Robotics premise": a document-courier robot handles physical
+;; deliverable / binder hand-off where used (ISIC 7020, management
+;; consultancy). The README says the physical component is thin (document
+;; handling); that is what is declared here: carrying a set of deliverable
+;; binders to the client's floor, and handing a binder across the meeting
+;; table.
+;;
+;; Every number without a cited source is marked `estimate` in its :basis.
+;; Replacing an estimate with a sourced value is this bot's growth work.
+{:physics/schema "itonami.physical-ai.spec.v1"
+ :repo "cloud-itonami/cloud-itonami-isic-7020"
+ :cases
+ [{:id :deliverable-binders-to-client-floor
+   :kind :transport
+   :procedure "courier robot carries the engagement's deliverable binders from the lift lobby to the client's meeting room and has to stop short"
+   :params {:mass-kg 35.0 :payload-kg 20.0 :distance-m 40.0 :v-max-mps 1.0 :a-max-mps2 0.5
+            :drive-force-n 60.0 :crr 0.02
+            :cog-height-m 0.45 :payload-cog-height-m 0.80 :support-half-length-m 0.22
+            :max-time-s 1800.0}
+   :sweep {:param :brake-decel-mps2 :values [0.5 1.0 1.5 2.0 2.5 3.0]}
+   :quantity :min-tipover-margin
+   :limit {:min 0.5 :basis "estimate: a 20 kg stack of binders riding high on a small courier keeps half its static tip-over margin on an emergency stop"}
+   :boundary {:lo 0.3 :hi 5.0}}
+  {:id :hand-binder-across-table
+   :kind :manipulator
+   :procedure "arm hands a deliverable binder across the meeting table to the client partner"
+   :params {:l1-m 0.40 :l2-m 0.35 :m1-kg 3.0 :m2-kg 2.0
+            :from [0.20 0.30] :to [0.70 0.15] :duration-s 1.5 :steps 500}
+   :sweep {:param :payload-kg :values [0.5 1.0 1.5 2.5 3.5]}
+   :quantity :peak-tau1-nm
+   :limit {:max 30.0 :basis "estimate: shoulder torque cap for a power-and-force-limited arm reaching toward a person"}
+   :boundary {:lo 0.1 :hi 10.0}}]}
